@@ -49,16 +49,14 @@ namespace mn {
                 TIMEOUT // GetMessage()
             };
 
+            LinuxCanBus();
+
 
             /// \brief      Initialises the CAN bus interface.
             /// \param      interfaceName   The name of the CAN interface you want to connect to (e.g. 'can0', 'vcan3').
             /// \param      bitRate             The bit rate of the CAN interface.
             /// \param      frameType       The frame type you wish to use with the CAN bus interface.
             void Init(ILinuxApi* linuxApi, const std::string &interfaceName, int bitRate, FrameFormat frameFormat);
-
-            std::string GetInterfaceName() const;
-
-            FrameFormat GetFrameFormat() const;
 
             /// \brief      Call to open the CAN bus (i.e. start).
             /// \details    Creates a socket and binds it to the SocketCAN interface.
@@ -86,6 +84,11 @@ namespace mn {
             /// \warning    Blocking method.
             virtual void Write(const CanMsg &canMsg);
 
+            std::string GetInterfaceName() const;
+
+            FrameFormat GetFrameFormat() const;
+
+            State GetState() const;
 
 
         private:

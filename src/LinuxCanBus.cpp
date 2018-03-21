@@ -26,6 +26,9 @@
 namespace mn {
     namespace LinuxCanBus {
 
+        LinuxCanBus::LinuxCanBus() :
+            state_(State::CLOSED) {}
+
         void LinuxCanBus::Init(ILinuxApi* linuxApi, const std::string &interfaceName, int bitRate, FrameFormat frameFormat) {
             std::cout << "Init() called." << std::endl;
 
@@ -34,14 +37,6 @@ namespace mn {
             interfaceName_ = interfaceName;
             bitRate_ = bitRate;
             frameFormat_ = frameFormat;
-        }
-
-        std::string LinuxCanBus::GetInterfaceName() const {
-            return interfaceName_;
-        }
-
-        LinuxCanBus::FrameFormat LinuxCanBus::GetFrameFormat() const {
-            return frameFormat_;
         }
 
         void LinuxCanBus::Open() {
@@ -185,8 +180,6 @@ namespace mn {
                 canFrame.can_id = CppUtils::Bits::SetBits<uint32_t>(canFrame.can_id, 1, CAN_ID_FRAME_FORMAT_BIT_POS, 1);
             }
 
-
-
             for (size_t i = 0; i < canMsg.data_.size(); i++)
                 canFrame.data[i] = canMsg.data_[i];
 
@@ -208,6 +201,18 @@ namespace mn {
                                          " Is the interface up?");
             }
 
+        }
+
+        std::string LinuxCanBus::GetInterfaceName() const {
+            return interfaceName_;
+        }
+
+        LinuxCanBus::FrameFormat LinuxCanBus::GetFrameFormat() const {
+            return frameFormat_;
+        }
+
+        LinuxCanBus::State LinuxCanBus::GetState() const {
+            return state_;
         }
 
     }
