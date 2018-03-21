@@ -2,6 +2,8 @@
 
 #include "LinuxCanBus/LinuxCanBus.hpp"
 
+using namespace mn::LinuxCanBus;
+
 TEST(TestingEncryption, cipher) {
 
     LinuxCanBus linuxCanBus;
