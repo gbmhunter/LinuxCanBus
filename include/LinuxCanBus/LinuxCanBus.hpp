@@ -1,3 +1,12 @@
+///
+/// \file               LinuxCanBus.hpp
+/// \author             Geoffrey Hunter (www.mbedded.ninja) <gbmhunter@gmail.com>
+/// \edited             n/a
+/// \created            2018-03-21
+/// \last-modified      2018-03-21
+/// \brief              Contains the LinuxCanBus class.
+/// \details
+///		See README in root dir for more info.
 
 // Header guard
 #ifndef MN_LINUX_CAN_BUS_LINUX_CAN_BUS_H_

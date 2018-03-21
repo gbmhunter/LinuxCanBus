@@ -1,3 +1,12 @@
+///
+/// \file               LinuxCanBus.cpp
+/// \author             Geoffrey Hunter (www.mbedded.ninja) <gbmhunter@gmail.com>
+/// \edited             n/a
+/// \created            2018-03-21
+/// \last-modified      2018-03-21
+/// \brief              Contains the LinuxCanBus class.
+/// \details
+///		See README in root dir for more info.
 
 // stdlib includes
 #include <iostream>
@@ -54,8 +63,8 @@ namespace mn {
             // Setup address for bind
             addr_.can_ifindex = ifr_.ifr_ifindex;
 
-            fcntl(socketFd_, F_SETFL, O_NONBLOCK);
-            if (bind(socketFd_, (struct sockaddr *) &addr_, sizeof(addr_)) < 0) {
+            linuxApi_->fcntl_(socketFd_, F_SETFL, O_NONBLOCK);
+            if (linuxApi_->bind_(socketFd_, (struct sockaddr *) &addr_, sizeof(addr_)) < 0) {
                 throw std::runtime_error("bind < 0");
             }
 
@@ -102,7 +111,7 @@ namespace mn {
             // select() returns once it is possible to call read() without
             // blocking. No write set or except set. soc + 1 is ndfs variable
             // which has to be highest file descriptor + 1.
-            int retVal = select((socketFd_ + 1), &readSet, NULL, NULL, &timeout);
+            int retVal = linuxApi_->select_((socketFd_ + 1), &readSet, NULL, NULL, &timeout);
 
 
             if (retVal == 1) {
@@ -115,7 +124,7 @@ namespace mn {
 
                     can_frame canFrame;
 
-                    auto numRxBytes = read(socketFd_, &canFrame, sizeof(struct can_frame));
+                    auto numRxBytes = linuxApi_->read_(socketFd_, &canFrame, sizeof(struct can_frame));
 
                     // read() should always return and state that it wrote to
                     // all bytes in the passed in can_frame
@@ -190,7 +199,7 @@ namespace mn {
             // could not find a reliable source which stated whether this is/is not thread
             // safe, so a mutex is used just in case
 //            writeSysCallMutex_.lock();
-            retval = write(socketFd_, &canFrame, sizeof(struct can_frame));
+            retval = linuxApi_->write_(socketFd_, &canFrame, sizeof(struct can_frame));
 //            writeSysCallMutex_.unlock();
 
             if (retval != sizeof(struct can_frame)) {
