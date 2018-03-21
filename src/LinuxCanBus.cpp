@@ -17,12 +17,22 @@
 namespace mn {
     namespace LinuxCanBus {
 
-        void LinuxCanBus::Init(const std::string &interfaceName, int bitRate, FrameFormat frameFormat) {
+        void LinuxCanBus::Init(ILinuxApi* linuxApi, const std::string &interfaceName, int bitRate, FrameFormat frameFormat) {
             std::cout << "Init() called." << std::endl;
+
+            linuxApi_ = linuxApi;
 
             interfaceName_ = interfaceName;
             bitRate_ = bitRate;
             frameFormat_ = frameFormat;
+        }
+
+        std::string LinuxCanBus::GetInterfaceName() const {
+            return interfaceName_;
+        }
+
+        LinuxCanBus::FrameFormat LinuxCanBus::GetFrameFormat() const {
+            return frameFormat_;
         }
 
         void LinuxCanBus::Open() {

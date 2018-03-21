@@ -1,3 +1,8 @@
+
+// Header guard
+#ifndef MN_LINUX_CAN_BUS_LINUX_CAN_BUS_H_
+#define MN_LINUX_CAN_BUS_LINUX_CAN_BUS_H_
+
 // stdlib includes
 #include <mutex>
 
@@ -7,6 +12,10 @@
 
 // Local includes
 #include "LinuxCanBus/CanMsg.hpp"
+#include "LinuxCanBus/ILinuxApi.hpp"
+#include "LinuxCanBus/LinuxApiReal.hpp"
+
+
 
 namespace mn {
     namespace LinuxCanBus {
@@ -36,7 +45,11 @@ namespace mn {
             /// \param      interfaceName   The name of the CAN interface you want to connect to (e.g. 'can0', 'vcan3').
             /// \param      bitRate             The bit rate of the CAN interface.
             /// \param      frameType       The frame type you wish to use with the CAN bus interface.
-            void Init(const std::string &interfaceName, int bitRate, FrameFormat frameFormat);
+            void Init(ILinuxApi* linuxApi, const std::string &interfaceName, int bitRate, FrameFormat frameFormat);
+
+            std::string GetInterfaceName() const;
+
+            FrameFormat GetFrameFormat() const;
 
             /// \brief      Call to open the CAN bus (i.e. start).
             /// \details    Creates a socket and binds it to the SocketCAN interface.
@@ -68,6 +81,8 @@ namespace mn {
 
         private:
 
+            ILinuxApi* linuxApi_;
+
             std::string interfaceName_;
 
             /// \brief      Keeps track of whether the CAN interface has been started
@@ -95,3 +110,5 @@ namespace mn {
         };
     }
 }
+
+#endif // #ifndef MN_LINUX_CAN_BUS_LINUX_CAN_BUS_H_
