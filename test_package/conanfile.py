@@ -3,9 +3,7 @@ from conans.model.conan_file import ConanFile
 from conans import CMake
 
 
-class TestConanGTestExample(ConanFile):
-    name = "TestConanGTestExample"
-    version = "0.1.0"
+class TestLinuxCanBus(ConanFile):
     author = "Geoffrey Hunter"
     url = ""
     license = "MIT"
@@ -21,6 +19,7 @@ class TestConanGTestExample(ConanFile):
         self.cmake.build()
 
     def imports(self):
+        self.copy("*.h", "include", "include")
         self.copy("*.so", "bin", "lib")
         self.copy("*.dll", "bin", "bin")
         self.copy("*.dylib", "bin", "lib")
