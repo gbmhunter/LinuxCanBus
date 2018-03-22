@@ -17,6 +17,15 @@ namespace mn {
         class ILinuxApi {
 
         public:
+
+            virtual int socket_(int domain, int type, int protocol) = 0;
+
+            virtual int close_(int fd) = 0;
+
+            /// \details    ioctl is a varidac function, a since no vargs version exists,
+            ///             we have to specialize here for our needs (1 extra param).
+            virtual int ioctl_(int fd, unsigned long request, ifreq* ifr) = 0;
+
             virtual ssize_t read_(int fd, void *buf, size_t count) = 0;
 
             virtual ssize_t write_(int fd, const void *buf, size_t count) = 0;
@@ -24,8 +33,8 @@ namespace mn {
             virtual int select_(int nfds, fd_set *readfds, fd_set *writefds,
                        fd_set *exceptfds, struct timeval *timeout) = 0;
 
-            /// \details    fcntl is a varidac function, a since no vargs version exists
-            ///             (i.e. fcntl), we have to specialize here for our needs (1 extra param).
+            /// \details    fcntl is a varidac function, a since no vargs version exists,
+            ///             we have to specialize here for our needs (1 extra param).
             virtual int fcntl_(int fd, int cmd, int openMode) = 0;
 
             virtual int bind_(int sockfd, const struct sockaddr *addr,

@@ -4,6 +4,7 @@
 
 // Linux includes
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <sys/select.h>
 #include <unistd.h>
 
@@ -21,6 +22,15 @@ namespace mn {
         class LinuxApiReal : public ILinuxApi {
 
             public:
+
+                int socket_(int domain, int type, int protocol) override {
+                    return socket(domain, type, protocol);
+                };
+
+                int close_(int fd) override {
+                    return close(fd);
+                };
+
                 ssize_t read_(int fd, void *buf, size_t count) override {
                     return read(fd, buf, count);
                 }
@@ -33,6 +43,10 @@ namespace mn {
                                    fd_set *exceptfds, struct timeval *timeout) override {
                     return select(nfds, readfds, writefds, exceptfds, timeout);
                 };
+
+                int ioctl_(int fd, unsigned long request, ifreq* ifr) override {
+                    return ioctl(fd, request, ifr);
+                }
 
                 int fcntl_(int fd, int cmd, int openMode) override {
                     return fcntl(fd, cmd, openMode);
