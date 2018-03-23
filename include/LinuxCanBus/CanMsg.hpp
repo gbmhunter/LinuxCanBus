@@ -11,8 +11,8 @@
 namespace mn {
     namespace LinuxCanBus {
 
-/// \brief      Protocol agnostic representation of an extended CAN message.
-/// \details    Converted to platform-specific data objects in the non-abstract CanBus objects.
+        /// \brief      Protocol agnostic representation of an extended CAN message.
+        /// \details    Converted to platform-specific data objects in the non-abstract CanBus objects.
         class CanMsg {
 
         public:
@@ -40,12 +40,9 @@ namespace mn {
             typedef struct {
                 uint32_t address : 29; // [0:28]
             } ArbitrationField;
-            ArbitrationField arbitrationField_;
-
-            std::vector<uint8_t> data_;
 
             /// \brief      Get the extended address from the arbitration field.
-            uint32_t GetAddress() {
+            uint32_t GetAddress() const {
                 return arbitrationField_.address;
             }
 
@@ -54,7 +51,18 @@ namespace mn {
                 arbitrationField_.address = address;
             }
 
+            const std::vector<uint8_t>& GetData() const {
+                return data_;
+            }
+
+            std::vector<uint8_t>& GetDataMutable() {
+                return data_;
+            }
+
         protected:
+
+            ArbitrationField arbitrationField_;
+            std::vector<uint8_t> data_;
 
         };
 

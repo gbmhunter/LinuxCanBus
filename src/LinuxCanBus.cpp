@@ -108,7 +108,6 @@ namespace mn {
             // which has to be highest file descriptor + 1.
             int retVal = linuxApi_->select_((socketFd_ + 1), &readSet, NULL, NULL, &timeout);
 
-
             if (retVal == 1) {
 
                 // Check if file descriptor is part of set. This is a sanity
@@ -127,9 +126,7 @@ namespace mn {
                         throw std::runtime_error("Received incomplete CAN frame.");
 
                     // Convert Linux can_frame into canMsg
-//                    canMsg.SetElevenBitId((uint16_t) Util::GetBits(canFrame.can_id, CAN_ID_11_BIT_ADD_START_POS, 11));
-//                    canMsg.SetEighteenBitId(Util::GetBits(canFrame.can_id, CAN_ID_18_BIT_ADD_START_POS, 18));
-                    canMsg.arbitrationField_.address = (uint32_t) CppUtils::Bits::GetBits(canFrame.can_id, 0, 29);
+                    canMsg.SetAddress((uint32_t) CppUtils::Bits::GetBits(canFrame.can_id, 0, 29));
 
                     // Make sure the received message frame format bit matches the expected frame format
                     if (CppUtils::Bits::GetBits(canFrame.can_id, CAN_ID_FRAME_FORMAT_BIT_POS, 1) == 0 &&
@@ -143,7 +140,7 @@ namespace mn {
                                 "Received extended frame format msg but frame format was set to STANDARD.");
 
                     for (int i = 0; i < canFrame.can_dlc; i++) {
-                        canMsg.data_.push_back(canFrame.data[i]);
+                        canMsg.GetDataMutable().push_back(canFrame.data[i]);
                     }
 
                     // We have received a CAN message, return!
@@ -165,8 +162,9 @@ namespace mn {
             can_frame canFrame;
             canFrame.can_id = 0;
 
-            uint32_t elevenBitId = CppUtils::Bits::GetBits(canMsg.arbitrationField_.address, 0, 11);
-            uint32_t eighteenBitId = CppUtils::Bits::GetBits(canMsg.arbitrationField_.address, 11, 18);
+            uint32_t address = canMsg.GetAddress();
+            uint32_t elevenBitId = CppUtils::Bits::GetBits(address, 0, 11);
+            uint32_t eighteenBitId = CppUtils::Bits::GetBits(address, 11, 18);
 
             canFrame.can_id = CppUtils::Bits::SetBits<uint32_t>(canFrame.can_id, elevenBitId, CAN_ID_11_BIT_ADD_START_POS, 11);
 
@@ -180,11 +178,11 @@ namespace mn {
                 canFrame.can_id = CppUtils::Bits::SetBits<uint32_t>(canFrame.can_id, 1, CAN_ID_FRAME_FORMAT_BIT_POS, 1);
             }
 
-            for (size_t i = 0; i < canMsg.data_.size(); i++)
-                canFrame.data[i] = canMsg.data_[i];
+            for (size_t i = 0; i < canMsg.GetData().size(); i++)
+                canFrame.data[i] = canMsg.GetData()[i];
 
             // Set the "data length code" to the number of bytes
-            canFrame.can_dlc = static_cast<uint8_t>(canMsg.data_.size());
+            canFrame.can_dlc = static_cast<uint8_t>(canMsg.GetData().size());
 
             ssize_t retval;
 
