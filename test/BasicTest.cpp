@@ -20,29 +20,32 @@ namespace {
     protected:
 
         BasicTests() {
+            mockLinuxApi_ = std::shared_ptr<MockLinuxApi>(new MockLinuxApi());
         }
 
         virtual ~BasicTests() {
         }
 
         void Init() {
-            linuxCanBus_.Init(&mockLinuxApi_, "vcan0", 0, LinuxCanBus::FrameFormat::STANDARD);
+            linuxCanBus_.Init("vcan0", 0, LinuxCanBus::FrameFormat::STANDARD);
+
+            linuxCanBus_.SetLinuxApi(mockLinuxApi_);
         }
 
         void Open() {
             // Socket should be opened to create end-point for CAN comms
-            EXPECT_CALL(mockLinuxApi_, socket_(PF_CAN, SOCK_RAW, CAN_RAW))
+            EXPECT_CALL(*mockLinuxApi_, socket_(PF_CAN, SOCK_RAW, CAN_RAW))
                     .Times(1).WillRepeatedly(Return(fakeFileDescriptor));
 
             // Return 0 to indicate success
-            EXPECT_CALL(mockLinuxApi_, ioctl_(fakeFileDescriptor, SIOCGIFINDEX, _))
+            EXPECT_CALL(*mockLinuxApi_, ioctl_(fakeFileDescriptor, SIOCGIFINDEX, _))
                     .Times(1).WillRepeatedly(Return(0));
 
-            EXPECT_CALL(mockLinuxApi_, fcntl_(fakeFileDescriptor, F_SETFL, O_NONBLOCK))
+            EXPECT_CALL(*mockLinuxApi_, fcntl_(fakeFileDescriptor, F_SETFL, O_NONBLOCK))
                     .Times(1).WillRepeatedly(Return(0));
 
             // Return 0 to indicate success
-            EXPECT_CALL(mockLinuxApi_, bind_(fakeFileDescriptor, _, _))
+            EXPECT_CALL(*mockLinuxApi_, bind_(fakeFileDescriptor, _, _))
                     .Times(1).WillRepeatedly(Return(0));
 
 
@@ -51,7 +54,7 @@ namespace {
 
         void Close() {
             // Return 0 to indicate success
-            EXPECT_CALL(mockLinuxApi_, close_(fakeFileDescriptor))
+            EXPECT_CALL(*mockLinuxApi_, close_(fakeFileDescriptor))
                     .Times(1).WillRepeatedly(Return(0));
 
             linuxCanBus_.Close();
@@ -59,7 +62,7 @@ namespace {
 
         void Write(const CanMsg& msg, can_frame& canFrame) {
 
-            EXPECT_CALL(mockLinuxApi_, write_(fakeFileDescriptor, _, _)).Times(1).WillRepeatedly(testing::Invoke(
+            EXPECT_CALL(*mockLinuxApi_, write_(fakeFileDescriptor, _, _)).Times(1).WillRepeatedly(testing::Invoke(
                     [&] (int fd, const void *buf, size_t count) -> ssize_t {
 
                         // Cast pointer to can_frame pointer and then copy to provided canFrame object
@@ -76,10 +79,10 @@ namespace {
         void Read(const can_frame& canFrame, CanMsg& msg) {
 
             // Returning 1 indicates there is data to be read
-            EXPECT_CALL(mockLinuxApi_, select_(_, _, _, _, _)).Times(1).WillRepeatedly(Return(1));
+            EXPECT_CALL(*mockLinuxApi_, select_(_, _, _, _, _)).Times(1).WillRepeatedly(Return(1));
 
 
-            EXPECT_CALL(mockLinuxApi_, read_(fakeFileDescriptor, _, _)).Times(1).WillRepeatedly(testing::Invoke(
+            EXPECT_CALL(*mockLinuxApi_, read_(fakeFileDescriptor, _, _)).Times(1).WillRepeatedly(testing::Invoke(
                     [&] (int fd, const void *buf, size_t count) -> ssize_t {
 
                         // Cast pointer to can_frame pointer and then copy from provided canFrame object
@@ -95,7 +98,7 @@ namespace {
             linuxCanBus_.Read(msg, 0);
         }
 
-        MockLinuxApi mockLinuxApi_;
+        std::shared_ptr<MockLinuxApi> mockLinuxApi_;
         LinuxCanBus linuxCanBus_;
         const int fakeFileDescriptor = 12;
 

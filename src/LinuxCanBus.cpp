@@ -27,16 +27,20 @@ namespace mn {
     namespace LinuxCanBus {
 
         LinuxCanBus::LinuxCanBus() :
-            state_(State::CLOSED) {}
+            state_(State::CLOSED) {
+            linuxApi_ = std::shared_ptr<ILinuxApi>(new LinuxApiReal());
+        }
 
-        void LinuxCanBus::Init(ILinuxApi* linuxApi, const std::string &interfaceName, int bitRate, FrameFormat frameFormat) {
+        void LinuxCanBus::Init(const std::string &interfaceName, int bitRate, FrameFormat frameFormat) {
             std::cout << "Init() called." << std::endl;
-
-            linuxApi_ = linuxApi;
 
             interfaceName_ = interfaceName;
             bitRate_ = bitRate;
             frameFormat_ = frameFormat;
+        }
+
+        void LinuxCanBus::SetLinuxApi(std::shared_ptr<ILinuxApi> linuxApi) {
+            linuxApi_ = linuxApi;
         }
 
         void LinuxCanBus::Open() {
