@@ -1,3 +1,8 @@
+
+#ifndef LINUX_CAN_BUS_CAN_MSG_H_
+#define LINUX_CAN_BUS_CAN_MSG_H_
+
+// stdlib includes
 #include <string>
 #include <vector>
 
@@ -55,3 +60,5 @@ namespace mn {
 
     }
 }
+
+#endif // #ifndef LINUX_CAN_BUS_CAN_MSG_H_

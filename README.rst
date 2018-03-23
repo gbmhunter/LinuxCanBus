@@ -1,9 +1,9 @@
 ===========
-CppTemplate
+LinuxCanBus
 ===========
 
 -----------------------------------------------------------------------------------------
-A template repository to quick-start C++ development.
+A C++ user-space CAN bus driver for Linux (using socketCAN).
 -----------------------------------------------------------------------------------------
 
 .. image:: https://travis-ci.org/mbedded-ninja/CppTemplate.svg?branch=master
@@ -16,22 +16,19 @@ A template repository to quick-start C++ development.
 Features
 --------
 
-- C++14 template/example project with example header files and source files
+- Easy to use API for controller a CAN device in Linux
 - CMake-based build system
-- Automatic build script in ./tools/
-- gtest-based unit tests (and a make target to automatically build/run unit tests)
-- CI functionality using TravisCI (with sudo available on Ubuntu 14.04)
-- Semantic versioning and keepachangelog.com-based Changelog format
-- Doyxgen support (example :code:`doxygen.conf` file provided) coupled with GitHub pages support, see https://mbedded-ninja.github.io/CppTemplate/index.html for example documentation.
-- Code coverage support using lcov and https://codecov.io. Code coverage is only generated for the files which matter, the source code in :code:`src/` and :code:`include/` directories.
+- Conan (package manager) support
 
----------------
-Automatic Build
----------------
+----------------------------
+Automatic Build/Test/Package
+----------------------------
+
+Requires Conan to be installed.
 
 .. code:: bash
 
-    ~/CppTemplate$ ./tools/build.sh
+    ~/LinuxCanBus$ conan create . testuser/testing
 
 ------------
 Manual Build
@@ -39,17 +36,8 @@ Manual Build
 
 .. code:: bash
 
-    ~/CppTemplate$ mkdir build
-    ~/CppTemplate$ cd build/
-    ~/CppTemplate/build$ cmake ..
-    ~/CppTemplate/build$ make
-    ~/CppTemplate/build$ make run_unit_tests
-    ~/CppTemplate/build$ sudo make install
+    ~/LinuxCanBus$ mkdir build
+    ~/LinuxCanBus$ cd build/
+    ~/LinuxCanBus/build$ conan install ..
+    ~/LinuxCanBus/build$ conan build ..
 
--------------------------
-To Generate Documentation
--------------------------
-
-.. code:: bash
-
-    ~/CppTemplate$ doxygen doxygen.conf
