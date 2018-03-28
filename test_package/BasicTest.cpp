@@ -8,20 +8,15 @@ namespace {
 
     class BasicTests : public ::testing::Test {
     protected:
-
-        BasicTests() {
-        }
-
-        virtual ~BasicTests() {
-        }
-
+        BasicTests() {}
+        virtual ~BasicTests() {}
     };
 
-    TEST_F(BasicTests, LinkedCorrectly) {
-        LinuxApiReal linuxApiReal;
+    TEST_F(BasicTests, LinkedCorrectly) {        
+        // The ability to create an object and call a function indicates that
+        // the LinuxCanBus library was created and linked correctly
         LinuxCanBus linuxCanBus;
-        linuxCanBus.Init(&linuxApiReal, "vcan0", 0, LinuxCanBus::FrameFormat::STANDARD);
-        ASSERT_EQ(2, 2);
+        linuxCanBus.Init("vcan0", LinuxCanBus::FrameFormat::STANDARD);        
     }
 
 

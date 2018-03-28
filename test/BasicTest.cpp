@@ -27,7 +27,7 @@ namespace {
         }
 
         void Init() {
-            linuxCanBus_.Init("vcan0", 0, LinuxCanBus::FrameFormat::STANDARD);
+            linuxCanBus_.Init("vcan0", LinuxCanBus::FrameFormat::STANDARD);
 
             linuxCanBus_.SetLinuxApi(mockLinuxApi_);
         }

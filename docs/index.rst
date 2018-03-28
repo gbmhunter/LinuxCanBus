@@ -6,6 +6,14 @@
 Welcome to LinuxCanBus's documentation!
 =======================================
 
+--------
+Features
+--------
+
+- Easy to use API for controller a CAN device in Linux
+- CMake-based build system
+- Conan (package manager) support
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

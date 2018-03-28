@@ -31,11 +31,10 @@ namespace mn {
             linuxApi_ = std::shared_ptr<ILinuxApi>(new LinuxApiReal());
         }
 
-        void LinuxCanBus::Init(const std::string &interfaceName, int bitRate, FrameFormat frameFormat) {
+        void LinuxCanBus::Init(const std::string &interfaceName, FrameFormat frameFormat) {
             std::cout << "Init() called." << std::endl;
 
-            interfaceName_ = interfaceName;
-            bitRate_ = bitRate;
+            interfaceName_ = interfaceName;            
             frameFormat_ = frameFormat;
         }
 

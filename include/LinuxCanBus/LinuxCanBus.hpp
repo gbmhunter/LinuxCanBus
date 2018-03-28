@@ -57,7 +57,7 @@ namespace mn {
             /// \param      interfaceName   The name of the CAN interface you want to connect to (e.g. 'can0', 'vcan3').
             /// \param      bitRate             The bit rate of the CAN interface.
             /// \param      frameType       The frame type you wish to use with the CAN bus interface.
-            void Init(const std::string &interfaceName, int bitRate, FrameFormat frameFormat);
+            void Init(const std::string &interfaceName, FrameFormat frameFormat);
 
             void SetLinuxApi(std::shared_ptr<ILinuxApi> linuxApi);
 
@@ -108,9 +108,7 @@ namespace mn {
 
             FrameFormat frameFormat_;
 
-            int socketFd_;
-
-            int bitRate_;
+            int socketFd_;            
 
             struct ifreq ifr_;
             struct sockaddr_can addr_;
