@@ -15,5 +15,11 @@ A C++ user-space CAN bus driver for Linux (using socketCAN).
 See http://linuxcanbus.readthedocs.io for installation instructions, examples and other documentation!
 
 
+--------
+Features
+--------
 
+- Easy to use API for controller a CAN device in Linux
+- CMake-based build system
+- Conan (package manager) support
 
